@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ItemService implements Services<ItemDto>{
+public class ItemService implements Services<ItemDto> {
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
     private final Mapper<ItemDto, Item> itemMapper;
