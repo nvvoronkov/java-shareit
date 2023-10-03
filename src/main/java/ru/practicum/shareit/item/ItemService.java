@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.ObjectNotFoundException;
 import ru.practicum.shareit.interfaces.Mapper;
+import ru.practicum.shareit.interfaces.Services;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserStorage;
@@ -19,11 +20,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ItemService {
+public class ItemService implements Services<ItemDto>{
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
     private final Mapper<ItemDto, Item> itemMapper;
 
+    @Override
     public ItemDto add(ItemDto itemDto) {
         if (!userStorage.checkIsObjectInStorage(itemDto.getOwner())) {
             log.warn(String.format("Пользователь userId=%s не найден", itemDto.getOwner()));
@@ -35,6 +37,7 @@ public class ItemService {
         return addedItemDto;
     }
 
+    @Override
     public ItemDto update(ItemDto itemDtoForUpdate) {
         if (!userStorage.checkIsObjectInStorage(itemDtoForUpdate.getOwner())) {
             log.warn(String.format("Пользователь userId=%s не найден", itemDtoForUpdate.getOwner()));
@@ -61,6 +64,7 @@ public class ItemService {
         return itemDtoForUpdate;
     }
 
+    @Override
     public ItemDto getById(Long itemId) {
         if (!itemStorage.checkIsObjectInStorage(itemId)) {
             log.warn(String.format("Объект itemId=%s не найден", itemId));
@@ -72,6 +76,7 @@ public class ItemService {
         return itemDto;
     }
 
+    @Override
     public List<ItemDto> getAll() {
         List<Item> listOfItems = itemStorage.getAll();
         List<ItemDto> listOfItemDto = listOfItems.stream().map(itemMapper::toDto).collect(Collectors.toList());
@@ -96,6 +101,7 @@ public class ItemService {
         return listOfItemDto;
     }
 
+    @Override
     public String delete(Long userId) {
         String message = itemStorage.delete(userId);
         log.info(message);
