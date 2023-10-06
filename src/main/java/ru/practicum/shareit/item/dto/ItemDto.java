@@ -5,10 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.request.ItemRequest;
 
-/**
- * TODO Sprint add-controllers.
- */
-
 @Data
 @Builder
 @AllArgsConstructor

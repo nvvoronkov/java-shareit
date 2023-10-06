@@ -8,8 +8,12 @@ import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
 
-@Component
+/*
+если сделать класс статическим, тогда я не смогу имплементировать интерфейс Mapper
+не очень понимаю зачем нужно тогда делать его статическим
+ */
 @Validated
+@Component
 public class ItemMapper implements Mapper<ItemDto, Item> {
 
     @Override

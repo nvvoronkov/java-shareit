@@ -7,8 +7,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.Valid;
 
-@Component
 @Validated
+@Component
 public class UserMapper implements Mapper<UserDto, User> {
 
     @Override
