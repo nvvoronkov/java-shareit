@@ -1,0 +1,31 @@
+spring:
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      db:
+      name: shareitDb
+      hibernate:
+      show_sql: true
+      format_sql: true
+      dialect: org.hibernate.dialect.H2Dialect
+      schema-generation:
+      create-script-source: schema.sql
+  config:
+    activate:
+      on-profile: ci,test
+  datasource:
+    username: shareitAdmin
+    password: postgres
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:./Bd/shareitDB
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+        web-allow-others: true
