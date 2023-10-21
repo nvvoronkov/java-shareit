@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
+import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.enums.RequestState;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.repositiory.BookingRepository;
 import ru.practicum.shareit.exceptions.ObjectNotFoundException;
 import ru.practicum.shareit.exceptions.UnsupportedStatusException;
@@ -190,7 +190,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException(String.format("Некорректное время начала бронирования объекта id=%s.",
                     booking.getBookerId()));
         }
-        if (booking.getEnd().isBefore(booking.getStart())) {
+        if (booking.getEnd().isBefore(booking.getStart()) && booking.getStart().equals(booking.getEnd())) {
             log.warn(String.format("Некорректное время окончания бронирования объекта id=%s.", booking.getBookerId()));
             throw new ValidationException(String.format("Некорректное время окончания бронирования объекта id=%s.",
                     booking.getBookerId()));
