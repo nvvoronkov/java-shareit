@@ -37,7 +37,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponseResponseDto add(ItemRequestDto itemRequestDto) {
-        //checkIsItemValid(itemRequestDto.getOwner());
         userServiceImpl.checkIsUserInStorage(itemRequestDto.getOwner());
         Item newItem = itemMapper.requestDtoToEntity(itemRequestDto);
         Item addedItem = itemRepository.save(newItem);
@@ -54,9 +53,9 @@ public class ItemServiceImpl implements ItemService {
         Item itemFromStorage;
         Optional<Item> optionalItemFromStorage = itemRepository.findById(itemRequestDto.getId());
         if (optionalItemFromStorage.isEmpty()) {
-            log.warn(String.format("Информация об объекте itemId=%s не найдена",
+            log.warn(String.format("Информация об объекту itemId=%s не найдена",
                     itemRequestDto.getId()));
-            throw new ObjectNotFoundException(String.format("Информация об объекте itemId=%s не найдена",
+            throw new ObjectNotFoundException(String.format("Информация об объекту itemId=%s не найдена",
                     itemRequestDto.getId()));
         } else {
             itemFromStorage = optionalItemFromStorage.get();
@@ -113,8 +112,8 @@ public class ItemServiceImpl implements ItemService {
         userServiceImpl.checkIsUserInStorage(commentRequestDto.getAuthor());
         checkIsItemInStorage(commentRequestDto.getItem());
         if (commentRequestDto.getText().isBlank()) {
-            log.warn("Текст комментария некорректный");
-            throw new ValidationException("Текст комментария некорректный");
+            log.warn("Текст комментария не корректный");
+            throw new ValidationException("Текст комментария не корректный");
         }
         if (checkIsUserCanMakeComment(commentRequestDto.getAuthor(), commentRequestDto.getItem())) {
             Comment comment = commentMapper.toEntity(commentRequestDto);
@@ -158,14 +157,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void checkIsItemAvailable(Long itemId) {
         if (!findById(itemId).getAvailable()) {
-            log.warn(String.format("Объект itemId=%s не доступен", itemId));
-            throw new ValidationException(String.format("Объект itemId=%s не доступен", itemId));
-        }
-    }
-
-    @Override
-    public void checkIsItemValid(Long itemId) {
-        if (findById(itemId).getAvailable() == null) {
             log.warn(String.format("Объект itemId=%s не доступен", itemId));
             throw new ValidationException(String.format("Объект itemId=%s не доступен", itemId));
         }

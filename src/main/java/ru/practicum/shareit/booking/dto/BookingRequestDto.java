@@ -5,7 +5,9 @@ import ru.practicum.shareit.booking.enums.BookingStatus;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

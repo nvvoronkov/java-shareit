@@ -5,10 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingRequestDto;
 import ru.practicum.shareit.booking.dto.BookingResponseDto;
-import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.enums.RequestState;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.repositiory.BookingRepository;
 import ru.practicum.shareit.exceptions.ObjectNotFoundException;
 import ru.practicum.shareit.exceptions.UnsupportedStatusException;
@@ -178,7 +178,7 @@ public class BookingServiceImpl implements BookingService {
     private void checkIsItemCanBeBooked(Long itemId, Instant start, Instant end) {
         Optional<Booking> optionalBooking = bookingRepository
                 .findByItemIdAndEndAfterAndStartBeforeOrderByStartDesc(itemId, start, end);
-        if (optionalBooking.isPresent()) {
+        if (!optionalBooking.isEmpty()) {
             log.warn(String.format("Объект id=%s не доступен для бронирования.", itemId));
             throw new ValidationException(String.format("Объект id=%s не доступен для бронирования.", itemId));
         }
@@ -190,7 +190,7 @@ public class BookingServiceImpl implements BookingService {
             throw new ValidationException(String.format("Некорректное время начала бронирования объекта id=%s.",
                     booking.getBookerId()));
         }
-        if (booking.getEnd().isBefore(booking.getStart()) && booking.getStart().equals(booking.getEnd())) {
+        if (booking.getEnd().isBefore(booking.getStart())) {
             log.warn(String.format("Некорректное время окончания бронирования объекта id=%s.", booking.getBookerId()));
             throw new ValidationException(String.format("Некорректное время окончания бронирования объекта id=%s.",
                     booking.getBookerId()));

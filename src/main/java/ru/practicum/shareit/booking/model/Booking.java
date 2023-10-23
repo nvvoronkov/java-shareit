@@ -7,7 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Future;
 import java.time.Instant;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

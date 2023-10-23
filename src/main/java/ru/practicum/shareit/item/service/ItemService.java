@@ -24,7 +24,5 @@ public interface ItemService {
 
     void checkIsItemAvailable(Long itemId);
 
-    public void checkIsItemValid(Long itemId);
-
     Item findById(Long itemId);
 }
