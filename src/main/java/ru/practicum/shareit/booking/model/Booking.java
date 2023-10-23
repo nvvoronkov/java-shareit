@@ -2,16 +2,17 @@ package ru.practicum.shareit.booking.model;
 
 import lombok.*;
 import ru.practicum.shareit.booking.enums.BookingStatus;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.Future;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@ToString
 @Entity
 @Table(name = "bookings")
 public class Booking {
@@ -19,46 +20,20 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Future(message = "Некоректная дата начала бронирования")
-    @Column(name = "start_date", nullable = false)
-    private Instant start;
+    @Column(name = "start_date")
+    private LocalDateTime start;
 
-    @Future(message = "Некоректная дата окончания бронирования")
-    @Column(name = "end_date", nullable = false)
-    private Instant end;
+    @Column(name = "end_date")
+    private LocalDateTime end;
 
-    @Column(name = "item_id", nullable = false)
-    private Long itemId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Item item;
 
-    @Column(name = "booker_id", nullable = false)
-    private Long bookerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private User booker;
 
-    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Booking booking = (Booking) o;
-
-        if (!id.equals(booking.id)) return false;
-        if (!start.equals(booking.start)) return false;
-        if (!end.equals(booking.end)) return false;
-        if (!itemId.equals(booking.itemId)) return false;
-        if (!bookerId.equals(booking.bookerId)) return false;
-        return status == booking.status;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + start.hashCode();
-        result = 31 * result + end.hashCode();
-        result = 31 * result + itemId.hashCode();
-        result = 31 * result + bookerId.hashCode();
-        result = 31 * result + status.hashCode();
-        return result;
-    }
 }

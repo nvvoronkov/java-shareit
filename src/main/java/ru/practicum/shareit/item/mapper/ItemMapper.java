@@ -1,80 +1,45 @@
 package ru.practicum.shareit.item.mapper;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.booking.repositiory.BookingRepository;
-import ru.practicum.shareit.item.dto.CommentResponseDto;
-import ru.practicum.shareit.item.dto.ItemRequestDto;
-import ru.practicum.shareit.item.dto.ItemResponseResponseDto;
-import ru.practicum.shareit.item.dto.ItemResponseResponseDtoForOwner;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
+import ru.practicum.shareit.item.dto.CommentReturnDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemReturnDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
-import java.time.Instant;
 import java.util.List;
 
-@Component
-@Validated
-@AllArgsConstructor
 public class ItemMapper {
-    private final BookingRepository bookingRepository;
 
-    public ItemResponseResponseDto toDtoForOtherUsers(Item item, List<CommentResponseDto> listOfComments) {
-        if (item == null) {
-            return null;
-        }
-        return ItemResponseResponseDto.builder()
+    public static ItemDto toItemDto(Item item) {
+        return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
-                .request(item.getRequest())
-                .lastBooking(null)
-                .nextBooking(null)
-                .comments(listOfComments)
                 .build();
     }
 
-    public ItemResponseResponseDtoForOwner toDtoForOwner(Item item, List<CommentResponseDto> listOfComments) {
-        if (item == null) {
-            return null;
-        }
-        return ItemResponseResponseDtoForOwner.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .request(item.getRequest())
-                .lastBooking(findLastBookingsByItemId(item.getId()))
-                .nextBooking(findNextBookingsByItemId(item.getId()))
-                .comments(listOfComments)
-                .build();
-    }
-
-    public Item requestDtoToEntity(ItemRequestDto itemRequestDto) {
-        if (itemRequestDto == null) {
-            return null;
-        }
+    public static Item toItem(ItemDto itemDto, User owner) {
         return Item.builder()
-                .id(itemRequestDto.getId())
-                .name(itemRequestDto.getName())
-                .description(itemRequestDto.getDescription())
-                .owner(itemRequestDto.getOwner())
-                .available(itemRequestDto.getAvailable())
+                .id(itemDto.getId())
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .owner(owner)
                 .build();
     }
 
-    public Booking findLastBookingsByItemId(Long itemId) {
-        List<Booking> listOfBookings = bookingRepository.findAllByItemIdAndEndBeforeOrderByEndDesc(itemId, Instant.now());
-        return listOfBookings.isEmpty() ? null : listOfBookings.get(0);
-    }
-
-    public Booking findNextBookingsByItemId(Long itemId) {
-        List<Booking> listOfBookings = bookingRepository.findAllByItemIdAndEndAfterOrderByEndDesc(itemId, Instant.now());
-        if (listOfBookings.isEmpty()) {
-            return null;
-        }
-        return listOfBookings.get(0);
+    public static ItemReturnDto toItemReturnDto(Item item, BookingShortDto lastBooking,
+                                                BookingShortDto nextBooking, List<CommentReturnDto> comments) {
+        return ItemReturnDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .lastBooking(lastBooking)
+                .nextBooking(nextBooking)
+                .comments(comments)
+                .build();
     }
 }

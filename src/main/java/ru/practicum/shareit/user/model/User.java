@@ -5,45 +5,39 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "имя пользователя не может быть пустым")
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull(message = "В описании пользователя отсутвует email")
-    @Email(message = "В описании пользователя представлен некорректный email")
-    @Column(name = "email", nullable = false, unique = true)
+    @NotNull(message = "email не может быть пустым")
+    @Email(message = "Некорректный адрес электронной почты")
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (!id.equals(user.id)) return false;
-        if (!Objects.equals(name, user.name)) return false;
-        return email.equals(user.email);
+        if (!(o instanceof User)) return false;
+        return id != null && id.equals(((User) o).getId());
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + email.hashCode();
-        return result;
+        return getClass().hashCode();
     }
 }

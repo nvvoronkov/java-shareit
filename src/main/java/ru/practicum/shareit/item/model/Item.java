@@ -1,67 +1,46 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "items")
 public class Item {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
-    @NotBlank(message = "Имя не должно быть пустым")
     private String name;
 
     @Column(name = "description")
-    @NotBlank(message = "Описание не должно быть пустым")
     private String description;
 
-    @Column(name = "is_available")
-    @NotNull(message = "Должно быть указано доступен ли объект: true/false")
+    @Column(name = "available")
     private Boolean available;
 
-    @Column(name = "owner_id")
-    @NotNull(message = "Должен быть указан UserId владельца")
-    private Long owner;
-
-    @Transient
-    private ItemRequest request;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private User owner;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Item item = (Item) o;
-
-        if (!id.equals(item.id)) return false;
-        if (!name.equals(item.name)) return false;
-        if (!description.equals(item.description)) return false;
-        if (!available.equals(item.available)) return false;
-        if (!owner.equals(item.owner)) return false;
-        return Objects.equals(request, item.request);
+        if (!(o instanceof Item)) return false;
+        return id != null && id.equals(((Item) o).getId());
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + description.hashCode();
-        result = 31 * result + available.hashCode();
-        result = 31 * result + owner.hashCode();
-        result = 31 * result + (request != null ? request.hashCode() : 0);
-        return result;
+        return getClass().hashCode();
     }
 }
