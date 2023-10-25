@@ -94,7 +94,7 @@ public class ItemServiceImpl implements ItemService {
 
         log.info("выполняется запрос на обновление пользователя | UserId - {}", ownerId);
         Item forUpDate = getItemIfExists(itemId);
-        itemOwnerValid(forUpDate, ownerId);
+        validateItemOwner(forUpDate, ownerId);
 
         if (item.getName() != null) forUpDate.setName(item.getName());
         if (item.getDescription() != null) forUpDate.setDescription(item.getDescription());
@@ -143,12 +143,12 @@ public class ItemServiceImpl implements ItemService {
 
         User author = userService.getUserByIdIfExists(userId);
         Item item = getItemIfExists(itemId);
-        validCommentator(author, item);
+        validateCommentator(author, item);
         Comment forRet = commentRepository.save(CommentMapper.toComment(commentDto, item, author));
         return CommentMapper.toCommentReturnDto(forRet);
     }
 
-    private void validCommentator(User commentator, Item item) {
+    private void validateCommentator(User commentator, Item item) {
         List<Booking> booking = bookingRepository.findAllByBookerAndItemAndStatus(commentator, item, LocalDateTime.now());
         if (booking == null || booking.isEmpty()) {
             throw new BookingException(String.format("пользователь с ID - %s не брал в аренду вещь с ID - %s",
@@ -156,7 +156,7 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    private void itemOwnerValid(Item item, long ownerId) {
+    private void validateItemOwner(Item item, long ownerId) {
         if (!item.getOwner().getId().equals(ownerId)) {
             throw new WrongOwnerException(String.format("пользователь с ID - %s не является владельцем вещи с ID - %s",
                     ownerId, item.getId()));
