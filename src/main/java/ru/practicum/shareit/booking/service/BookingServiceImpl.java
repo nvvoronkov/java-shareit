@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dao.BookingRepository;
@@ -80,30 +81,35 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingInfoList(long bookerId, String state) {
+    public List<BookingDto> getBookingInfoList(long bookerId, String state, int from, int size) {
         log.info("выполнется запрос на получение списка бронированиий по автору бронирования | UserId - {}", bookerId);
         User booker = userService.getUserByIdIfExists(bookerId);
         BookingRequestState bookingRequestState = BookingRequestState.valueOf(state);
 
         switch (bookingRequestState) {
             case ALL:
-                return mapBookingListToDto(bookingRepository.findAllByBookerOrderByStartDesc(booker));
+                return mapBookingListToDto(bookingRepository.findAllByBookerOrderByStartDesc(booker,
+                        PageRequest.of(from / size, size)));
 
             case FUTURE:
                 return mapBookingListToDto(bookingRepository.findAllByBookerForFuture(booker,
-                        LocalDateTime.now()));
+                        LocalDateTime.now(), PageRequest.of(from / size, size)));
 
             case PAST:
-                return mapBookingListToDto(bookingRepository.findAllPastBookingsByBooker(booker, LocalDateTime.now()));
+                return mapBookingListToDto(bookingRepository.findAllPastBookingsByBooker(booker, LocalDateTime.now(),
+                        PageRequest.of(from / size, size)));
 
             case CURRENT:
-                return mapBookingListToDto(bookingRepository.findAllCurrentBookingsByBooker(booker, LocalDateTime.now()));
+                return mapBookingListToDto(bookingRepository.findAllCurrentBookingsByBooker(booker, LocalDateTime.now(),
+                        PageRequest.of(from / size, size)));
 
             case WAITING:
-                return mapBookingListToDto(bookingRepository.findAllByBookerAndStatusOrderByStartDesc(booker, BookingStatus.WAITING));
+                return mapBookingListToDto(bookingRepository.findAllByBookerAndStatusOrderByStartDesc(booker,
+                        BookingStatus.WAITING, PageRequest.of(from / size, size)));
 
             case REJECTED:
-                return mapBookingListToDto(bookingRepository.findAllByBookerAndStatusOrderByStartDesc(booker, BookingStatus.REJECTED));
+                return mapBookingListToDto(bookingRepository.findAllByBookerAndStatusOrderByStartDesc(booker,
+                        BookingStatus.REJECTED, PageRequest.of(from / size, size)));
 
             default: {
                 log.warn("Unknown state:" + bookingRequestState);
@@ -113,30 +119,35 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getBookingOwnerInfoList(long ownerId, String state) {
+    public List<BookingDto> getBookingOwnerInfoList(long ownerId, String state, int from, int size) {
         log.info("выполнется запрос на получение списка бронирований по владельцу вещи | UserId - {}", ownerId);
         User owner = userService.getUserByIdIfExists(ownerId);
         BookingRequestState bookingRequestState = BookingRequestState.valueOf(state);
         switch (bookingRequestState) {
 
             case ALL:
-                return mapBookingListToDto(bookingRepository.findAllByOwnerOrderByStartDesc(owner));
+                return mapBookingListToDto(bookingRepository.findAllByOwnerOrderByStartDesc(owner,
+                        PageRequest.of(from / size, size)));
 
             case FUTURE:
                 return mapBookingListToDto(bookingRepository.findAllByOwnerForFuture(owner,
-                        LocalDateTime.now()));
+                        LocalDateTime.now(), PageRequest.of(from / size, size)));
 
             case PAST:
-                return mapBookingListToDto(bookingRepository.findAllPastBookingsByOwner(owner, LocalDateTime.now()));
+                return mapBookingListToDto(bookingRepository.findAllPastBookingsByOwner(owner, LocalDateTime.now(),
+                        PageRequest.of(from / size, size)));
 
             case CURRENT:
-                return mapBookingListToDto(bookingRepository.findAllCurrentBookingsByOwner(owner, LocalDateTime.now()));
+                return mapBookingListToDto(bookingRepository.findAllCurrentBookingsByOwner(owner, LocalDateTime.now(),
+                        PageRequest.of(from / size, size)));
 
             case WAITING:
-                return mapBookingListToDto(bookingRepository.findAllByOwnerAndStatusOrderByStartDesc(owner, BookingStatus.WAITING));
+                return mapBookingListToDto(bookingRepository.findAllByOwnerAndStatusOrderByStartDesc(owner,
+                        BookingStatus.WAITING, PageRequest.of(from / size, size)));
 
             case REJECTED:
-                return mapBookingListToDto(bookingRepository.findAllByOwnerAndStatusOrderByStartDesc(owner, BookingStatus.REJECTED));
+                return mapBookingListToDto(bookingRepository.findAllByOwnerAndStatusOrderByStartDesc(owner,
+                        BookingStatus.REJECTED, PageRequest.of(from / size, size)));
 
             default: {
                 log.warn("Unknown state:" + bookingRequestState);
@@ -145,7 +156,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private Booking getBookingIfExists(long bookingId) {
+    public Booking getBookingIfExists(long bookingId) {
         return bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new BookingDataException("Бронирование с ID - " + bookingId + " не найдено"));
     }
@@ -186,7 +197,7 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
-    private void checkOwnerIsNotBooker(long userId, long itemId) {
-        if (userId == itemId) throw new BookingDataException("Владелец вещи не может арендовать вещь");
+    private void checkOwnerIsNotBooker(long userId, long ownerId) {
+        if (userId == ownerId) throw new BookingDataException("Владелец вещи не может арендовать вещь");
     }
 }
