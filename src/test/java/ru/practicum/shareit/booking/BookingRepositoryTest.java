@@ -20,7 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-class BookingRepositoryIT {
+class BookingRepositoryTest {
 
     @Autowired
     private BookingRepository bookingRepository;
