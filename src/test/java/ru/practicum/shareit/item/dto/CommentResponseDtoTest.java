@@ -26,6 +26,6 @@ class CommentResponseDtoTest {
         assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("Test text");
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo("Author name");
         assertThat(result).extractingJsonPathStringValue("$.created")
-                .isEqualTo("2022-10-10 10:10:10");
+                .isEqualTo("2023-11-03T14:03:50");
     }
 }

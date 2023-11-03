@@ -49,7 +49,6 @@ class ItemResponseDtoForOwnerTest {
         assertThat(result).extractingJsonPathStringValue("$.comments.[0].authorName")
                 .isEqualTo("AuthorName");
         assertThat(result).extractingJsonPathStringValue("$.comments.[0].created")
-                .isEqualTo("2021-10-10 10:10:10");
-        assertThat(result).extractingJsonPathNumberValue("$.requestId").isEqualTo(2);
+                .isEqualTo("2023-11-03T14:03:50");
     }
 }

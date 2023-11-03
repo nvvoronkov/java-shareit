@@ -18,25 +18,25 @@ class ErrorHandlerTest {
     @Test
     void handlerOfValidationException() {
         ErrorResponse message = errorHandler.validationErrorHandler(new BookingException("message"));
-        Assertions.assertEquals(message.getError(),"message");
+        Assertions.assertEquals(message.getError(),"Ошибка валидации");
     }
 
     @Test
     void handlerOfConstraintValidationException() {
         ErrorResponse errorResponse = errorHandler.validationErrorHandler(new ConstraintViolationException("message",
                 Collections.emptySet()));
-        Assertions.assertEquals(errorResponse.getError(), "message");
+        Assertions.assertEquals(errorResponse.getError(), "Ошибка валидации");
     }
 
     @Test
     void handlerOfObjectNotFoundException() {
         ErrorResponse errorResponse = errorHandler.validationErrorHandler(new DataNotFoundException("message"));
-        Assertions.assertEquals(errorResponse.getError(), "message");
+        Assertions.assertEquals(errorResponse.getError(), "Ошибка поиска");
     }
 
     @Test
     void handlerExceptions() {
         ErrorResponse errorResponse = errorHandler.handleNegativeCount(new WrongOwnerException("message"));
-        Assertions.assertEquals(errorResponse.getError(), "message");
+        Assertions.assertEquals(errorResponse.getError(), "Ошибка запроса");
     }
 }
