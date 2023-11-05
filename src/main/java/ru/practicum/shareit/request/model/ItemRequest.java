@@ -5,6 +5,7 @@ import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -21,13 +22,16 @@ public class ItemRequest {
     Long id;
 
     @Column(name = "description")
+    @NotNull
     String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
+    @NotNull
     User requester;
 
     @Column(name = "created_date")
+    @NotNull
     LocalDateTime created;
 
     @Override
