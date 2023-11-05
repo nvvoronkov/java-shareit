@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class BookingServiceImplTest {
+class BookingServiceTest {
 
     @Mock
     private BookingRepository bookingRepository;
@@ -41,7 +41,7 @@ class BookingServiceImplTest {
     private UserService userService;
 
     @InjectMocks
-    private BookingServiceImpl bookingService;
+    private BookingService bookingService;
 
     private final User ownerForTests = new User(2L, "test", "test");
 
