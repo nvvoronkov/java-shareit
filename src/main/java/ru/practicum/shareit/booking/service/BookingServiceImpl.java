@@ -13,7 +13,6 @@ import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.BookingDataException;
-import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.model.User;
@@ -59,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
 
         if (approved) {
             if (forApproving.getStatus().equals(BookingStatus.APPROVED)) {
-                throw new BookingException("Booking уже подтврежден");
+                throw new BookingDataException("Booking уже подтврежден");
             }
             forApproving.setStatus(BookingStatus.APPROVED);
         } else {
@@ -163,21 +162,21 @@ public class BookingServiceImpl implements BookingService {
 
     private Item getItemIfExistsAndAvailable(long itemId) {
         Item item = itemService.getItemIfExists(itemId);
-        if (!item.getAvailable()) throw new BookingException("Вещь c ID - " + itemId + " недоступна для бронирования");
+        if (!item.getAvailable()) throw new BookingDataException("Вещь c ID - " + itemId + " недоступна для бронирования");
         return item;
     }
 
     private void validBookingStartEndDate(BookingSaveDto bookingSaveDto) {
         if (bookingSaveDto.getStart().isBefore(LocalDateTime.now()))
-            throw new BookingException("Начало бронирования не " +
+            throw new BookingDataException("Начало бронирования не " +
                                        "может быть раньше текущей даты");
-        if (bookingSaveDto.getEnd().isBefore(LocalDateTime.now())) throw new BookingException("Конец бронирования не " +
+        if (bookingSaveDto.getEnd().isBefore(LocalDateTime.now())) throw new BookingDataException("Конец бронирования не " +
                                                                                               "может быть раньше текущей даты");
         if (bookingSaveDto.getEnd().isBefore(bookingSaveDto.getStart()))
-            throw new BookingException("Начало бронирования " +
+            throw new BookingDataException("Начало бронирования " +
                                        "не может быть позже окончания");
         if (bookingSaveDto.getStart().isEqual(bookingSaveDto.getEnd()))
-            throw new BookingException("Начало и окончание " +
+            throw new BookingDataException("Начало и окончание " +
                                        "бронирования должны быть разными датами");
     }
 

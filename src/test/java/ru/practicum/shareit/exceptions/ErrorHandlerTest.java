@@ -16,12 +16,6 @@ class ErrorHandlerTest {
     private final ErrorHandler errorHandler;
 
     @Test
-    void handlerOfValidationException() {
-        ErrorResponse message = errorHandler.validationErrorHandler(new BookingException("message"));
-        Assertions.assertEquals(message.getError(),"Ошибка валидации");
-    }
-
-    @Test
     void handlerOfConstraintValidationException() {
         ErrorResponse errorResponse = errorHandler.validationErrorHandler(new ConstraintViolationException("message",
                 Collections.emptySet()));
