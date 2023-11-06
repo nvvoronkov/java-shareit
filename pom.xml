@@ -166,28 +166,33 @@
                                         <limits>
                                             <limit>
                                                 <counter>INSTRUCTION</counter>
-                                                <value>COUNTER</value>
+                                                <value>COVEREDRATIO</value>
                                                 <minimum>0.01</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>LINE</counter>
-                                                <value>COUNTER</value>
+                                                <value>COVEREDRATIO</value>
                                                 <minimum>0.9</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>BRANCH</counter>
-                                                <value>COUNTER</value>
+                                                <value>COVEREDRATIO</value>
                                                 <minimum>0.6</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>COMPLEXITY</counter>
-                                                <value>COUNTER</value>
+                                                <value>COVEREDRATIO</value>
                                                 <minimum>0.6</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>METHOD</counter>
-                                                <value>COUNTER</value>
+                                                <value>COVEREDRATIO</value>
                                                 <minimum>0.7</minimum>
+                                            </limit>
+                                            <limit>
+                                                <counter>CLASS</counter>
+                                                <value>MISSEDCOUNT</value>
+                                                <maximum>1</maximum>
                                             </limit>
                                         </limits>
                                     </rule>
