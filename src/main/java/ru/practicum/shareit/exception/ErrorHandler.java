@@ -34,6 +34,13 @@ public class ErrorHandler {
         return new ErrorResponse("Ошибка валидации", e.getMessage());
     }
 
+    @ExceptionHandler(BookingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse validationErrorHandler(final BookingException e) {
+        log.debug("Получен статус 400 BAD REQUEST {}", e.getMessage(), e);
+        return new ErrorResponse("Ошибка валидации", e.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> validationErrorHandler(final IllegalArgumentException e) {

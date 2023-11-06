@@ -11,7 +11,7 @@ import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
-import ru.practicum.shareit.exception.BookingDataException;
+import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.exception.WrongOwnerException;
 import ru.practicum.shareit.item.dao.CommentRepository;
@@ -160,7 +160,7 @@ public class ItemServiceImpl implements ItemService {
     private void validateCommentator(User commentator, Item item) {
         List<Booking> booking = bookingRepository.findAllByBookerAndItemAndStatus(commentator, item, LocalDateTime.now());
         if (booking == null || booking.isEmpty()) {
-            throw new BookingDataException(String.format("пользователь с ID - %s не брал в аренду вещь с ID - %s",
+            throw new BookingException(String.format("пользователь с ID - %s не брал в аренду вещь с ID - %s",
                     commentator.getId(), item.getId()));
         }
     }
