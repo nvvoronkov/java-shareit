@@ -11,6 +11,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
@@ -51,7 +52,7 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> getBookingOwnerInfoList(@RequestHeader("X-Sharer-User-Id") long ownerId,
                                                     @RequestParam(value = "state", defaultValue = "ALL") String stringState,
-                                                    @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                                    @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
                                                     @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
         log.info("получен запрос GET bookings/owner | OwnerId - {}", ownerId);
         return bookingService.getBookingOwnerInfoList(ownerId, stringState, from, size);
