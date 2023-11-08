@@ -2,24 +2,30 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.booking.enums.BookingStatus;
 import ru.practicum.shareit.booking.dao.BookingRepository;
-import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.dto.BookingShortDto;
+import ru.practicum.shareit.booking.enums.BookingStatus;
+import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.BookingException;
 import ru.practicum.shareit.exception.DataNotFoundException;
 import ru.practicum.shareit.exception.WrongOwnerException;
 import ru.practicum.shareit.item.dao.CommentRepository;
 import ru.practicum.shareit.item.dao.ItemRepository;
-import ru.practicum.shareit.item.dto.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentReturnDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemReturnDto;
 import ru.practicum.shareit.item.mapper.CommentMapper;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -42,21 +48,19 @@ import static java.util.stream.Collectors.toList;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-
     private final UserService userService;
-
     private final BookingRepository bookingRepository;
-
     private final CommentRepository commentRepository;
+    private final ItemRequestService itemRequestService;
 
 
     @Override
-    public List<ItemReturnDto> getAllItemsByUser(long ownerId) {
+    public List<ItemReturnDto> getAllItemsByUser(long ownerId, int from, int size) {
 
         log.info("выполнется запрос на получение всех вещей пользователя | UserId - {}", ownerId);
         userService.getUserByIdIfExists(ownerId);
 
-        List<Item> allUserItems = itemRepository.findAllByOwnerId(ownerId).stream()
+        List<Item> allUserItems = itemRepository.findAllByOwnerId(ownerId, PageRequest.of(from / size, size)).stream()
                 .sorted(Comparator.comparing(Item::getId))
                 .collect(Collectors.toList());
 
@@ -84,7 +88,12 @@ public class ItemServiceImpl implements ItemService {
 
         User owner = userService.getUserByIdIfExists(ownerId);
 
-        Item forRet = itemRepository.save(ItemMapper.toItem(item, owner));
+        ItemRequest itemRequest = null;
+        if (item.getRequestId() != null) {
+            itemRequest = itemRequestService.getItemRequestIfExists(item.getRequestId());
+        }
+
+        Item forRet = itemRepository.save(ItemMapper.toItem(item, owner, itemRequest));
         return ItemMapper.toItemDto(forRet);
     }
 
@@ -108,7 +117,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemReturnDto getItemInfo(long id, long ownerId) {
         Item item = getItemIfExists(id);
-        log.info("выполняется запрос на получение пользователя по ID | UserId - {}", id);
+        log.info("выполняется запрос на получение вещи по ID | UserId - {}", id);
 
         List<Booking> bookings = new ArrayList<>();
         if (item.getOwner().getId().equals(ownerId)) {
@@ -124,11 +133,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItems(String text) {
+    public List<ItemDto> searchItems(String text, int from, int size) {
         log.info("выполняется поиск по тексту text - {}", text);
         if (text.isBlank() || text.isEmpty()) return new ArrayList<>();
 
-        return mapperListItem(itemRepository.findAllByNameAndDescription(text));
+        return mapperListItem(itemRepository.findAllByNameAndDescription(text, PageRequest.of(from / size, size)));
     }
 
     @Override

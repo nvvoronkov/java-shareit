@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
+@Builder
 @Table(name = "bookings")
 public class Booking {
     @Id

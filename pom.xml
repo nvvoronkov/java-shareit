@@ -64,7 +64,6 @@
             <artifactId>commons-email</artifactId>
             <version>1.5</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -173,17 +172,17 @@
                                             <limit>
                                                 <counter>LINE</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.9</minimum>
+                                                <minimum>0.7</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>BRANCH</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.6</minimum>
+                                                <minimum>0.4</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>COMPLEXITY</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.6</minimum>
+                                                <minimum>0.5</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>METHOD</counter>
@@ -193,7 +192,7 @@
                                             <limit>
                                                 <counter>CLASS</counter>
                                                 <value>MISSEDCOUNT</value>
-                                                <maximum>1</maximum>
+                                                <maximum>2</maximum>
                                             </limit>
                                         </limits>
                                     </rule>

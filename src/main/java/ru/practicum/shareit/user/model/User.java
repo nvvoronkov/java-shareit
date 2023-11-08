@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString
 @Entity
+@Builder
 @Table(name = "users")
 public class User {
 
@@ -38,6 +39,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return id.hashCode();
     }
 }

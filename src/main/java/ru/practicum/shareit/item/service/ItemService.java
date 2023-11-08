@@ -9,7 +9,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 
 public interface ItemService {
-    List<ItemReturnDto> getAllItemsByUser(long userId);
+    List<ItemReturnDto> getAllItemsByUser(long userId, int from, int size);
 
     ItemDto saveItem(long userId, ItemDto item);
 
@@ -17,7 +17,7 @@ public interface ItemService {
 
     ItemReturnDto getItemInfo(long id, long userId);
 
-    List<ItemDto> searchItems(String text);
+    List<ItemDto> searchItems(String text, int from, int size);
 
     Item getItemIfExists(long id);
 

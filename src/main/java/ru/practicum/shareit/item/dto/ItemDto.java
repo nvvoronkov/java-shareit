@@ -26,4 +26,6 @@ public class ItemDto {
 
     @NotNull(message = "поле доступа вещи не может быть пустым")
     private Boolean available;
+
+    private Long requestId;
 }

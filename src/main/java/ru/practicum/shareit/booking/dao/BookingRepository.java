@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.dao;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,11 +21,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE b.booker = :booker " +
             "AND b.start > :currentTime " +
             "ORDER BY b.start DESC")
-    List<Booking> findAllByBookerForFuture(User booker, LocalDateTime currentTime);
+    List<Booking> findAllByBookerForFuture(User booker, LocalDateTime currentTime, PageRequest pageable);
 
-    List<Booking> findAllByBookerOrderByStartDesc(User booker);
+    List<Booking> findAllByBookerOrderByStartDesc(User booker, PageRequest pageable);
 
-    List<Booking> findAllByBookerAndStatusOrderByStartDesc(User booker, BookingStatus status);
+    List<Booking> findAllByBookerAndStatusOrderByStartDesc(User booker, BookingStatus status, PageRequest pageable);
 
     @Query("SELECT DISTINCT b " +
             "FROM Booking b " +
@@ -32,14 +33,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE bi.owner = :owner " +
             "AND b.start > :currentTime " +
             "ORDER BY b.start DESC")
-    List<Booking> findAllByOwnerForFuture(User owner, LocalDateTime currentTime);
+    List<Booking> findAllByOwnerForFuture(User owner, LocalDateTime currentTime, PageRequest pageable);
 
     @Query("SELECT DISTINCT b " +
             "FROM Booking b " +
             "JOIN FETCH b.item as bi " +
             "WHERE bi.owner = :owner " +
             "ORDER BY b.start DESC")
-    List<Booking> findAllByOwnerOrderByStartDesc(User owner);
+    List<Booking> findAllByOwnerOrderByStartDesc(User owner, PageRequest pageable);
 
     @Query("SELECT DISTINCT b " +
             "FROM Booking b " +
@@ -47,7 +48,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE bi.owner = :owner " +
             "AND b.status = :status " +
             "ORDER BY b.start DESC")
-    List<Booking> findAllByOwnerAndStatusOrderByStartDesc(User owner, BookingStatus status);
+    List<Booking> findAllByOwnerAndStatusOrderByStartDesc(User owner, BookingStatus status, PageRequest pageable);
 
     List<Booking> findAllByItemInAndStatusOrderByStartAsc(List<Item> items, BookingStatus status);
 
@@ -70,7 +71,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE bb = :booker " +
             "AND :currentTime BETWEEN b.start AND b.end " +
             "ORDER BY b.start DESC ")
-    List<Booking> findAllCurrentBookingsByBooker(User booker, LocalDateTime currentTime);
+    List<Booking> findAllCurrentBookingsByBooker(User booker, LocalDateTime currentTime, PageRequest pageable);
 
     @Query("SELECT DISTINCT b " +
             "FROM Booking b " +
@@ -78,7 +79,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE bi.owner = :owner " +
             "AND :currentTime BETWEEN b.start AND b.end " +
             "ORDER BY b.start DESC ")
-    List<Booking> findAllCurrentBookingsByOwner(User owner, LocalDateTime currentTime);
+    List<Booking> findAllCurrentBookingsByOwner(User owner, LocalDateTime currentTime, PageRequest pageable);
 
     @Query("SELECT DISTINCT b " +
             "FROM Booking b " +
@@ -86,7 +87,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE bb = :booker " +
             "AND :currentTime > b.end " +
             "ORDER BY b.start DESC ")
-    List<Booking> findAllPastBookingsByBooker(User booker, LocalDateTime currentTime);
+    List<Booking> findAllPastBookingsByBooker(User booker, LocalDateTime currentTime, PageRequest pageable);
 
     @Query("SELECT DISTINCT b " +
             "FROM Booking b " +
@@ -94,5 +95,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE bi.owner = :owner " +
             "AND :currentTime > b.end " +
             "ORDER BY b.start DESC ")
-    List<Booking> findAllPastBookingsByOwner(User owner, LocalDateTime currentTime);
+    List<Booking> findAllPastBookingsByOwner(User owner, LocalDateTime currentTime, PageRequest pageable);
 }
