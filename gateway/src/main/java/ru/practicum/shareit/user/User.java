@@ -1,8 +1,9 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 
 @NoArgsConstructor
@@ -11,18 +12,14 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "users")
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @NotNull(message = "name cannot be empty")
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @NotNull(message = "email cannot be empty")
+    @Email(message = "invalid email")
     private String email;
 
     @Override

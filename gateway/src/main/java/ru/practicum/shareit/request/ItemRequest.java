@@ -1,12 +1,10 @@
-package ru.practicum.shareit.request.model;
-
+package ru.practicum.shareit.request;
 
 import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,22 +12,15 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@Entity
-@Table(name = "requests")
 public class ItemRequest {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "description")
+    @NotNull
     String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     User requester;
 
-    @Column(name = "created_date")
+    @NotNull
     LocalDateTime created;
 
     @Override

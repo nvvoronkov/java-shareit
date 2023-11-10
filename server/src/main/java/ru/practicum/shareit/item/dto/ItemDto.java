@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,15 +12,10 @@ import javax.validation.constraints.NotNull;
 public class ItemDto {
     private Long id;
 
-    @NotNull(message = "name cannot be empty")
-    @NotBlank(message = "name cannot be empty")
     private String name;
 
-    @NotNull(message = "description cannot be empty")
-    @NotBlank(message = "description cannot be empty")
     private String description;
 
-    @NotNull(message = "available cannot be empty")
     private Boolean available;
 
     private Long requestId;

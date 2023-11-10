@@ -8,9 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingSaveDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
@@ -23,7 +20,7 @@ public class BookingController {
 
     @PostMapping()
     public BookingDto saveBooking(@RequestHeader("X-Sharer-User-Id") long userId,
-                                  @Valid @RequestBody BookingSaveDto bookingDto) {
+                                  @RequestBody BookingSaveDto bookingDto) {
         log.info("request received POST bookings/ | UserId - {}", userId);
         return bookingService.saveBooking(userId, bookingDto);
     }
@@ -46,8 +43,8 @@ public class BookingController {
     @GetMapping()
     public List<BookingDto> getBookingInfoList(@RequestHeader("X-Sharer-User-Id") long bookerId,
                                                @RequestParam(value = "state", defaultValue = "ALL") String stringState,
-                                               @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                               @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
+                                               @RequestParam(value = "from", defaultValue = "0") int from,
+                                               @RequestParam(value = "size", defaultValue = "10") int size) {
 
         log.info("request received GET bookings | BookingId - {}", bookerId);
 
@@ -61,8 +58,8 @@ public class BookingController {
     @GetMapping("/owner")
     public List<BookingDto> getBookingOwnerInfoList(@RequestHeader("X-Sharer-User-Id") long ownerId,
                                                     @RequestParam(value = "state", defaultValue = "ALL") String stringState,
-                                                    @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                                    @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
+                                                    @RequestParam(value = "from", defaultValue = "0") int from,
+                                                    @RequestParam(value = "size", defaultValue = "10") int size) {
         log.info("request received GET bookings/owner | OwnerId - {}", ownerId);
         BookingRequestState state;
         try {

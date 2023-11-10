@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.exception.*;
 
-import javax.validation.ConstraintViolationException;
-import java.util.Collections;
-
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class ErrorHandlerTest {
@@ -19,13 +16,6 @@ class ErrorHandlerTest {
     void handlerOfValidationException() {
         ErrorResponse message = errorHandler.validationErrorHandler(new BookingException("message"));
         Assertions.assertEquals(message.getError(),"Error validate");
-    }
-
-    @Test
-    void handlerOfConstraintValidationException() {
-        ErrorResponse errorResponse = errorHandler.validationErrorHandler(new ConstraintViolationException("message",
-                Collections.emptySet()));
-        Assertions.assertEquals(errorResponse.getError(), "Error validate");
     }
 
     @Test

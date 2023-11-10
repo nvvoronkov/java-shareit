@@ -10,10 +10,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemReturnDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import javax.websocket.server.PathParam;
 import java.util.List;
 
@@ -27,14 +23,14 @@ public class ItemController {
 
     @GetMapping
     public List<ItemReturnDto> getAllItemsByUser(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                 @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
-                                                 @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
+                                                 @RequestParam(value = "from", defaultValue = "0") int from,
+                                                 @RequestParam(value = "size", defaultValue = "10") int size) {
         log.info("request received GET items/ | UserId - {} ", userId);
         return itemService.getAllItemsByUser(userId, from, size);
     }
 
     @PostMapping
-    public ItemDto saveItem(@RequestHeader("X-Sharer-User-Id") long userId, @Valid @RequestBody ItemDto item) {
+    public ItemDto saveItem(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody ItemDto item) {
         log.info("request received POST items/ | UserId - {}", userId);
         return itemService.saveItem(userId, item);
     }
@@ -55,8 +51,8 @@ public class ItemController {
 
     @GetMapping("/search")
     public List<ItemDto> searchItems(@PathParam("text") String text,
-                                     @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
-                                     @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
+                                     @RequestParam(value = "from", defaultValue = "0") int from,
+                                     @RequestParam(value = "size", defaultValue = "10") int size) {
         log.info("request received GET /items/search text '{}'", text);
         return itemService.searchItems(text, from, size);
     }
@@ -64,7 +60,7 @@ public class ItemController {
     @PostMapping("{itemId}/comment")
     public CommentReturnDto createComment(@RequestHeader("X-Sharer-User-Id") long userId,
                                           @PathVariable long itemId,
-                                          @Valid @RequestBody CommentDto commentDto) {
+                                          @RequestBody CommentDto commentDto) {
         log.info("request received POST items/{itemId}/comment | UserId - {}", userId);
         return itemService.createComment(userId, itemId, commentDto);
     }

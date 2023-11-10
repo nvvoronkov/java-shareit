@@ -8,7 +8,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class ItemMapper {
@@ -34,7 +33,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public static ItemReturnDto toItemReturnDto(Item item, @NotNull BookingShortDto lastBooking,
+    public static ItemReturnDto toItemReturnDto(Item item, BookingShortDto lastBooking,
                                                 BookingShortDto nextBooking, List<CommentReturnDto> comments) {
         return ItemReturnDto.builder()
                 .id(item.getId())
