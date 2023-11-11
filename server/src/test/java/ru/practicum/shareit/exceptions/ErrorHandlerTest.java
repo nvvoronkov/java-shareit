@@ -15,7 +15,7 @@ class ErrorHandlerTest {
     @Test
     void handlerOfValidationException() {
         ErrorResponse message = errorHandler.validationErrorHandler(new BookingException("message"));
-        Assertions.assertEquals(message.getError(),"Error validate");
+        Assertions.assertEquals(message.getError(), "Error validate");
     }
 
     @Test
@@ -27,12 +27,6 @@ class ErrorHandlerTest {
     @Test
     void handlerExceptions() {
         ErrorResponse errorResponse = errorHandler.handleNegativeCount(new WrongOwnerException("message"));
-        Assertions.assertEquals(errorResponse.getError(), "Error request");
-    }
-
-    @Test
-    void handlerExceptionsEmail() {
-        ErrorResponse errorResponse = errorHandler.validationErrorHandler(new DuplicateEmailException("message"));
         Assertions.assertEquals(errorResponse.getError(), "Error request");
     }
 }

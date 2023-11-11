@@ -7,9 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
-
+import javax.validation.constraints.PositiveOrZero;
 
 @RestController
 @RequestMapping(path = "/requests")
@@ -33,7 +32,7 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> getAllRequests(@RequestHeader("X-Sharer-User-Id") long requesterId,
-                                                 @RequestParam(value = "from", defaultValue = "0") @Min(0) int from,
+                                                 @RequestParam(value = "from", defaultValue = "0") @PositiveOrZero int from,
                                                  @RequestParam(value = "size", defaultValue = "10") @Positive int size) {
         log.info("request received: GET /requests/all");
         return itemRequestClient.getAllRequests(requesterId, from, size);

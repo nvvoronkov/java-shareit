@@ -8,6 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
+import ru.practicum.shareit.exception.BookingDataException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 import java.util.Map;
@@ -39,6 +40,9 @@ public class ItemRequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getAllRequests(long requesterId, int from, int size) {
+        if (from < 0 || size < 0) {
+            throw new IllegalArgumentException("not valid data");
+        }
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size
