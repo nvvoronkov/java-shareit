@@ -1,0 +1,81 @@
+package ru.practicum.shareit.user.service;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exception.DataNotFoundException;
+import ru.practicum.shareit.exception.DuplicateEmailException;
+import ru.practicum.shareit.user.dao.UserRepository;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
+import ru.practicum.shareit.user.model.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+
+@RequiredArgsConstructor
+@Slf4j
+@Service
+@Transactional(readOnly = true)
+public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+
+    @Override
+    public List<UserDto> getAllUsers() {
+        List<User> forRet = userRepository.findAll();
+        return forRet.stream()
+                .flatMap(u -> {
+                    UserDto dto = UserMapper.toUserDto(u);
+                    return Stream.of(dto);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public UserDto save(UserDto userDto) {
+        try {
+            return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+        } catch (DuplicateEmailException e) {
+            throw new DuplicateEmailException(
+                    String.format("user with email %s already exists", userDto.getEmail()));
+        }
+    }
+
+    @Transactional
+    @Override
+    public UserDto updateUser(UserDto userDto, long id) {
+        User userForUpdate = getUserByIdIfExists(id);
+
+        if (userDto.getName() != null) {
+            userForUpdate.setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null) {
+            userForUpdate.setEmail(userDto.getEmail());
+        }
+
+        User userForReturn = userRepository.save(userForUpdate);
+
+        return UserMapper.toUserDto(userForReturn);
+    }
+
+    public UserDto getUserById(long id) {
+        return UserMapper.toUserDto(getUserByIdIfExists(id));
+    }
+
+    @Transactional
+    @Override
+    public void deleteUserById(long id) {
+        getUserByIdIfExists(id);
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public User getUserByIdIfExists(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("user with id " + id + " not found"));
+    }
+}
